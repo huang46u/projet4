@@ -28,7 +28,7 @@ public class WorldOfTrees extends World {
 
 	        	float height = (float) this.getCellHeight(x, y);
 		    	
-		        if ( height >= 0 )
+		        if ( height >= 0.0 )
 		        {
 		        	// snowy mountains
 		        	/*
@@ -62,10 +62,12 @@ public class WorldOfTrees extends World {
     		else
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
-    	for(int i=0;i<50;i++){
-    		
-    		
+    	
+    	//predator.add(new Predator(100,100,this));
+    	for(int i=0;i<5;i++){
     	predator.add(new Predator((int)(Math.random()*200),(int)(Math.random()*200),this));
+    	
+
     	proie.add(new Proie((int)(Math.random()*200),(int)(Math.random()*200),this));
     	}
     	/*predator.add(new Predator(10,10,this));

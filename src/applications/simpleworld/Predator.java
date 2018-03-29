@@ -134,7 +134,7 @@ public class Predator extends Agent{
 	
 	@Override
 	public void step() {
-		if ( world.getIteration() % 10 == 0 ){
+		if ( world.getIteration() % 60 == 0 ){
 		
 			hp-=0.1;
 			energy-=0.1;
@@ -153,65 +153,89 @@ public class Predator extends Agent{
 					}
 			}
 			else{
-				double dice = Math.random();
-				if ( dice < 0.25 )
-					this.x = ( this.x + 1 ) % this.world.getWidth() ;
-				else
-					if ( dice < 0.5 )
-						this.x = ( this.x - 1 +  this.world.getWidth() ) % this.world.getWidth() ;
-					else
-						if ( dice < 0.75 )
-							this.y = ( this.y + 1 ) % this.world.getHeight() ;
-						else
-							this.y = ( this.y - 1 +  this.world.getHeight() ) % this.world.getHeight() ;
-			
+				bouge();
 			}	
 		}
 	}
 
 	 public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
-	    {
-
-	        // display a monolith
-	        
-	        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
-	        
-	    	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
+	 {
+ 			int x2 = (x-(offsetCA_x%myWorld.getWidth()));
 	    	if ( x2 < 0) x2+=myWorld.getWidth();
 	    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
 	    	if ( y2 < 0) y2+=myWorld.getHeight();
-
+	    	float trans_x=offset+x2*stepX;
+	    	float trans_y=offset+y2*stepY;
 	    	float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
 	    	
-	        gl.glColor3f(1.f,1.f,1.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+	    	gl.glPushMatrix();
+	    		gl.glTranslatef(trans_x, trans_y, height*normalizeHeight);
+	    		
+	        // display a monolith1
+	        
+	        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
+	       
+//	        gl.glColor3f(1.f,1.f,1.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+//
+//	        gl.glColor3f(1.f,1.f,1.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+//	        
+//	        gl.glColor3f(1.f,1.f,1.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+//
+//	        gl.glColor3f(1.f,1.f,1.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+//
+//	        gl.glColor3f(1.0f,0.f,0.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
+//	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
+//	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
+	        gl.glBegin(GL2.GL_QUADS);
+	    	gl.glColor3f(1.f,1.f,1.f);
+	        gl.glVertex3f(-lenX,-lenY, 0.0f);
+	        gl.glVertex3f( -lenX, -lenY,4.f);
+	        gl.glVertex3f( lenX, -lenY,4.f);
+	        gl.glVertex3f( lenX, -lenY, 0.0f);
 
 	        gl.glColor3f(1.f,1.f,1.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+	        gl.glVertex3f( lenX, lenY, 0.0f);
+	        gl.glVertex3f( lenX, lenY,  4.f);
+	        gl.glVertex3f( -lenX, lenY,  4.f);
+	        gl.glVertex3f( -lenX, lenY, 0.0f);
 	        
 	        gl.glColor3f(1.f,1.f,1.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight);
+	        gl.glVertex3f( lenX, -lenY, 0.0f);
+	        gl.glVertex3f( lenX, -lenY,  4.f);
+	        gl.glVertex3f( lenX, lenY, 4.f);
+	        gl.glVertex3f( lenX, lenY, 0.0f);
 
 	        gl.glColor3f(1.f,1.f,1.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
+	        gl.glVertex3f( -lenX, lenY, 0.0f);
+	        gl.glVertex3f( -lenX, lenY, 4.f);
+	        gl.glVertex3f( -lenX, -lenY,  4.f);
+	        gl.glVertex3f( -lenX, -lenY, 0.0f);
 
 	        gl.glColor3f(1.0f,0.f,0.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
-	        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
-	        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
+	        gl.glVertex3f( -5*lenX, -5*lenY, 5.f);
+	        gl.glVertex3f( -5*lenX, 5*lenY, 5.f);
+	        gl.glVertex3f( 5*lenX, 5*lenY, 5.f);
+	        gl.glVertex3f( 5*lenX, -5*lenY, 5.f);
+	        gl.glEnd();
+	        gl.glPopMatrix();
 	    }
 
 

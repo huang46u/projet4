@@ -9,6 +9,8 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.*;
 import cellularautomata.*;
+import climat.Neige;
+import climat.Pluie;
 
 import objects.*;
 
@@ -20,7 +22,9 @@ public abstract class World {
 	protected ArrayList<Proie> proie = new ArrayList<Proie>();
 	protected ArrayList<Plante> plante = new ArrayList<Plante>();
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
-    
+    float[] dir= {-1.0f,0.0f,-1.0f};
+	Pluie rain=new Pluie(dir,this);
+	Neige neige = new Neige(dir,this);
 	protected int dxCA;
 	protected int dyCA;
 
@@ -86,7 +90,8 @@ public abstract class World {
     		}
     	
     	initCellularAutomata(__dxCA,__dyCA,landscape);
-
+    	rain.init();
+    	neige.init();
     }
     
     
@@ -142,19 +147,27 @@ public abstract class World {
 	public void displayUniqueObjects(World _myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset,
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight) 
 	{
-    	for ( int i = 0 ; i < uniqueObjects.size(); i++ ){
-    		
+    	/*for ( int i = 0 ; i < uniqueObjects.size(); i++ ){
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
-    	for ( int i = 0 ; i < predator.size(); i++ ){
-    		predator.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-    	}
+    	
     	for ( int i = 0 ; i < plante.size(); i++ ){
     		plante.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-    	}
-    	for ( int i = 0 ; i < proie.size(); i++ ){
+    	}*/
+    	/*for ( int i = 0 ; i < proie.size(); i++ ){
     		proie.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
+    	for ( int i = 0 ; i < predator.size(); i++ ){
+    		
+	    	predator.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+	    	
+    	}*/
+    	
+    	/*rain.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
+    	rain.background();*/
+		neige.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
+    	neige.background();
+		//predator.get(0).displayUniqueObject(_myWorld, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 	}
     
 	public int getWidth() { return dxCA; }

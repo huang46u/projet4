@@ -14,8 +14,11 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.*;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import applications.simpleworld.Predator;
+import climat.Drop;
 import objects.CommonObject;
 import objects.Monolith;
 import skybox.Skybox;
@@ -36,16 +39,11 @@ import landscapegenerator.PerlinNoiseLandscapeGenerator;
  * 
  * 
 */
-
-
-
-
-
 /**
  * Self-contained code 
  * displaying a landscape generated with Perlin noise
  */
-public class Landscape implements GLEventListener, KeyListener, MouseListener{
+public class Landscape implements GLEventListener, KeyListener, MouseListener,MouseWheelListener{
 	
 		private World _myWorld; 
 		private GLU glu;
@@ -55,7 +53,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		static boolean MY_LIGHT_RENDERING =false; // true: nicer but slower
 		
 		final static boolean SMOOTH_AT_BORDER = true; // nicer (but wrong) rendering at border (smooth altitudes)
-		
+		static boolean GOD_MOD=false;
 		//final static double landscapeAltitudeRatio = 0.6; // 0.5: half mountain, half water ; 0.3: fewer water
 		
 		static boolean VIEW_FROM_ABOVE = false; // also deactivate altitudes
@@ -80,17 +78,27 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		 * - each call to gl.glColor3f costs a lot (speed is down by two if no call!)
 		 */
 	
-		static Animator animator; 
+		static FPSAnimator animator; 
 		//  https://sites.google.com/site/justinscsstuff/jogl-tutorial-3
-		//  if you use a regular Animator object instead of the FPSAnimator, your program will render as fast as possible. You can, however, limit the framerate of a regular Animator by asking the graphics driver to synchronize with the refresh rate of the display (v-sync). Because the target framerate is often the same as the refresh rate, which is often 60-75 or so, this method is a great choice as it lets the driver do the work of limiting frame changes. 
+		//  if you use a regular Animator object instead of the FPSAnimator, your program will render as fast as possible. 
+		//  You can, however, limit the framerate of a regular Animator by asking the graphics driver to synchronize with the 
+		//  refresh rate of the display (v-sync). Because the target framerate is often the same as the refresh rate, which 
+		//  is often 60-75 or so, this method is a great choice as it lets the driver do the work of limiting frame changes. 
 		//  However, some Intel GPUs may ignore this setting. In the init method, active v-sync as follows:
 		//  add : drawable.getGL().setSwapInterval(1); in the init method
 		//  then: in the main method, replace the FPSAnimator with a regular Animator.
 		
-		private float rotateX = 0.0f;
+		private float rotate1 = 0.0f;
+		private float rotate2 = 0.0f;
+		private float rotateX=0.0f;
+		private float trans_x = 0.0f;
+		private float trans_y = -50.0f;
+		private float trans_z = -200.0f;
 		
 		private float rotationVelocity = 0.6f; // 0.2f
-
+		private float acc_x=4.f;
+		private float acc_y=4.f;
+		private float acc_z=4.f;
         int it = 0;
         int movingIt = 0;
         int dxView;
@@ -187,11 +195,12 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		final GLCanvas canvas = new GLCanvas(caps); // original
     		
             final Frame frame = new Frame("World Of Cells");
-            animator = new Animator(canvas);
+            animator = new FPSAnimator(canvas,60);
             //Landscape myLandscape = new Landscape(dx,dy,myWorld);
             canvas.addGLEventListener(__landscape);
             canvas.addMouseListener(__landscape);// register mouse callback functions
             canvas.addKeyListener(__landscape);// register keyboard callback functions
+            canvas.addMouseWheelListener(__landscape);
             frame.add(canvas);
             frame.setSize(1024, 768);
             //frame.setSize(1280, 960);
@@ -219,6 +228,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         @Override
         public void init(GLAutoDrawable glDrawable) {
                 GL2 gl = glDrawable.getGL().getGL2();
+                
                 glu=new GLU();
                 // Enable front face culling (can speed up code, but is not always 
                 // GO FAST ???
@@ -231,7 +241,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 // ? gl.setSwapInterval(1);
                 // END of GO FAST ???
 
-
+                
                 gl.glShadeModel(GLLightingFunc.GL_SMOOTH);
                 gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                 gl.glClearDepth(1.0f);
@@ -319,11 +329,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                // Enable lighting in GL.
 	                gl.glEnable(GL2.GL_LIGHT1);
 	                gl.glEnable(GL2.GL_LIGHTING);
-	                
-	                
+
                 }
 
-                
                 // ***
                 
                 ////gl.glTranslatef(0.0f, 0.0f, -100.0f); // 0,0,-5
@@ -349,24 +357,43 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glRotatef(-90.f, 0.0f, 0.0f, 1.0f);
                 // DEBUG
                 /**/
-
+                
+                
                 if ( VIEW_FROM_ABOVE == true )
                 {
                 	// as seen from above, no rotation (debug mode)
-                	gl.glTranslatef(0.0f, 0.0f, -400.0f); // 0,0,-5
+                	gl.glTranslatef(0.0f, 0.0f, -0.0f); // 0,0,-5
                 }
                 else
                 {
-                    // continuous rotation (default view) 
-                    gl.glTranslatef(0.0f, -44.0f, -130.0f); // 0,0,-5
-                    gl.glRotatef(rotateX, 0.0f, 1.0f, 0.0f);
+                	// continuous rotation (default view) 
+                    if(GOD_MOD){
+                	gl.glPushMatrix();
+                	gl.glTranslatef(0.0f, -50.0f, -300.0f); // 0,0,-5
+                    
                     gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
+                    skybox.draw(gl);
+                    gl.glPopMatrix();
+                    
+                    gl.glTranslatef(trans_x, trans_y, trans_z);// 0,0,-5
+                    gl.glRotatef(rotate2, 0.0f, 1.0f, 0.0f);
+                    gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
+                    
+                    gl.glRotatef(rotateX, -1.0f, 0.0f, 0.0f);
+                    
+                    }
+                    else{
+                    	gl.glTranslatef(0.0f, -44.0f, -130.0f); // 0,0,-5
+                        gl.glRotatef(rotate1, 0.0f, 1.0f, 0.0f);
+                        gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
+                        skybox.draw(gl);
+                    }
                 }
           
                 //System.out.println("rotateT = " + rotateT );
                
                
-                skybox.draw(gl);
+               
                 it++;
                 //if ( it % 30 == 0 )//&& it != 0)
                 //	movingIt++;
@@ -375,11 +402,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 //movingIt=dxView+1;
                 
         		// ** update Cellular Automata
-            	
+                
             	_myWorld.step();
 
         		// ** draw everything
-
+            	
             	gl.glBegin(GL2.GL_QUADS);                
                 
                 //movingX = movingIt;// it; // was: it
@@ -456,8 +483,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                        
 	                        gl.glVertex3f( offset+x*stepX+xSign*lenX, offset+y*stepY+ySign*lenY, zValue);
                         }
-
-                        /**/
+                        
+                        
                         
                         // * display objects
 
@@ -468,32 +495,32 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                         	float normalizeHeight = ( smoothFactor[0] + smoothFactor[1] + smoothFactor[2] + smoothFactor[3] ) / 4.f * (float)heightBooster * heightFactor;
                         	_myWorld.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
                         }
+                        
                 	}
-	            
-	            /**/
-	            
+                gl.glEnd(); 
+                
 	            // TODO+: displayObjects()
-	            
-	            if ( DISPLAY_OBJECTS == true) // calls my world with enough info to display anything anywhere
+                if ( DISPLAY_OBJECTS == true) // calls my world with enough info to display anything anywhere
                 { 
 	            	float normalizeHeight = (float)heightBooster * heightFactor;
-	            	_myWorld.displayUniqueObjects(_myWorld,gl,movingX,movingY,offset,stepX,stepY,lenX,lenY,normalizeHeight); 
+	            	_myWorld.displayUniqueObjects(_myWorld,gl,movingX,movingY,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+	            	 
 	            }
-
-	            gl.glEnd();      		
-
+                if(!GOD_MOD)
+                rotate1+=rotationVelocity;
+                
+                	
+	                 	
+                
+                
                 // increasing rotation for the next iteration                   
-                rotateX += rotationVelocity; 
-  
+               
+                
                 //gl.glFlush(); // GO FAST ???
             	//gLDrawable.swapBuffers(); // GO FAST ???  // should be done at the end (http://stackoverflow.com/questions/1540928/jogl-double-buffering)
             	
 
         }
-        
-
-        
- 
         
         /**
          * 
@@ -512,7 +539,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glLoadIdentity();
                 final float fh = 1.0f;
                 final float fw = fh * aspect;
-                //glu.gluPerspective(90.0, aspect, 2, 10000.0);
+                if(GOD_MOD){
+                glu=new GLU();
+                glu.gluPerspective(45.0, aspect, 1, 10000.0);
+                }
+                else
                 gl.glFrustumf(-fw, fw, -fh, fh, 1.0f, 10000.0f);
                 gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
                 gl.glLoadIdentity();
@@ -615,27 +646,44 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 					heightBooster--;
 				break;
 			case KeyEvent.VK_UP:
+				if(GOD_MOD)
+					trans_z+=acc_z;
+				else
 				movingX = ( movingX + 1 ) % (dxView-1);
 				break;
 			case KeyEvent.VK_DOWN:
+				if(GOD_MOD)
+					trans_z-=acc_z;
+				else
 				movingX = ( movingX - 1 + dxView-1 ) % (dxView-1);
 				break;
 			case KeyEvent.VK_RIGHT:
+				if(GOD_MOD)
+					trans_x-=acc_x;
+				else
 				movingY = ( movingY - 1 + dyView-1 ) % (dyView-1);
 				break;
 			case KeyEvent.VK_LEFT:
+				if(GOD_MOD)
+					trans_x+=acc_x;
+				else
 				movingY = ( movingY + 1 ) % (dyView-1);
 				break; 
-			case KeyEvent.VK_Q:
-				rotationVelocity-=0.1;
+			case KeyEvent.VK_A:
+				if(GOD_MOD)
+				rotate2-=rotationVelocity;
+				else
+				rotationVelocity+=0.1f;
 				break;
-			case KeyEvent.VK_D:
-				rotationVelocity+=0.1;
+			case KeyEvent.VK_E:
+				if(GOD_MOD)
+				rotate2+=rotationVelocity;
+				else
+				rotationVelocity-=0.1f;
 				break;
-			case KeyEvent.VK_Z:
+			case KeyEvent.VK_G:
+				GOD_MOD =!GOD_MOD;
 				break;
-			case KeyEvent.VK_S:
-				break; 
 			case KeyEvent.VK_H:
 				System.out.println(
 						"Help:\n" +
@@ -666,4 +714,32 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			// TODO Auto-generated method stub
 			
 		}
+
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			if(GOD_MOD){
+				
+				if(e.getWheelRotation()==1){
+						trans_y+=acc_y;
+						trans_z+=acc_x;
+						rotateX+=2.5f;
+						if(trans_y>-34.f) trans_y=-34.f;
+						if(trans_z>-184.f) trans_z=-184.f;
+						if(rotateX>8.f) rotateX=8.f;
+						System.out.println("trans_z: "+trans_z+"trans_y: "+trans_y+" rotateX : "+ rotateX);
+					}
+				if(e.getWheelRotation()==-1){	
+						trans_y-=acc_y/2;
+						trans_z-=acc_x/2;
+						rotateX-=2.5f;
+						if(trans_y<-64.f) trans_y=-64.f;
+						if(trans_z<-214.f) trans_z=-214.f;
+						if(rotateX<-25.0f) rotateX=-25.0f;
+						System.out.println("trans_z: "+trans_z+"trans_y: "+trans_y+" rotateX : "+ rotateX);
+						}
+					
+				
+			}
+		}
+		
 }
