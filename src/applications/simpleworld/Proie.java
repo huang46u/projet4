@@ -34,7 +34,7 @@ public class Proie extends Agent {
 	public void step() {
 		if ( world.getIteration() % 10 == 0 ){
 		
-			hp-=0.1;
+			setHp(getHp() - 0.1);
 			energy-=0.1;
 			if(estDangerous()){
 				ArrayList<Predator> pred=predatorTropProch();
@@ -46,7 +46,7 @@ public class Proie extends Agent {
 				dormir();
 				return;
 			}
-			if(hp<80&& world.getPlante().size()!=0){
+			if(getHp()<80&& world.getPlante().size()!=0){
 				Plante p=rechercher_plante();
 				System.out.println(p);
 					if(peut_manger(p)){
@@ -166,7 +166,7 @@ public class Proie extends Agent {
 				this.x=p.getCoordinate()[0];
 				this.y=p.getCoordinate()[1];
 				p.alive=false;
-				hp+=30;
+				setHp(getHp() + 30);
 		}
 	}
 	

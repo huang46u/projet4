@@ -33,9 +33,12 @@ public class Tree extends CommonObject {
     		float altitude = (float)height * normalizeHeight ;
     		
     		//float heightFactor, double heightBooster, float smoothFactor[]
+    		gl.glPushMatrix();
+    		gl.glTranslatef(offset+x*stepX, offset+y*stepY, altitude);
+    		gl.glBegin(GL2.GL_QUADS);
     		
     		
-            gl.glVertex3f( offset+x*stepX-lenY/16.f, offset+y*stepY+lenY/2.f, altitude + 4.f );
+            /*gl.glVertex3f( offset+x*stepX-lenY/16.f, offset+y*stepY+lenY/2.f, altitude + 4.f );
             gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude );
             
             gl.glVertex3f( offset+x*stepX+lenY/16.f, offset+y*stepY-lenY/2.f, altitude + 4.f );
@@ -45,7 +48,22 @@ public class Tree extends CommonObject {
             gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude );
            
             gl.glVertex3f( offset+x*stepX+lenY/2.f, offset+y*stepY-lenY/16.f, altitude + 4.f );
-            gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude );
+            gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude );*/
+            
+            gl.glVertex3f( -lenY/16.f, lenY/2.f, 4.f );
+            gl.glVertex3f( 0.0f, 0.0f, 0.0f);
+            
+            gl.glVertex3f( 0.0f+lenY/16.f, 0.0f-lenY/2.f, 0.0f + 4.f );
+            gl.glVertex3f( 0.0f, 0.0f, 0.0f );
+
+            gl.glVertex3f( 0.0f-lenY/2.f, 0.0f+lenY/16.f, 0.0f + 4.f );
+            gl.glVertex3f( 0.0f, 0.0f, 0.0f );
+           
+            gl.glVertex3f( 0.0f+lenY/2.f, 0.0f-lenY/16.f, 0.0f + 4.f );
+            gl.glVertex3f( 0.0f, 0.0f, 0.0f );
+            
+            gl.glEnd();
+            gl.glPopMatrix();
         }
     }
 

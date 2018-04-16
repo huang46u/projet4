@@ -1,5 +1,4 @@
 package skybox;
-import static com.jogamp.opengl.GL.GL_LINEAR;
 import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
 import static com.jogamp.opengl.GL.GL_TEXTURE_MAG_FILTER;
 import static com.jogamp.opengl.GL.GL_TEXTURE_MIN_FILTER;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 public class Skybox {
 	 private float depth_2 = 1.0f;
@@ -44,6 +42,7 @@ public class Skybox {
 	  public Skybox(){
 		  this(1000.0f,1000.0f,1000.0f);
 	  }
+	  
 	  private void initTexture(int tex){
 		  texturepath=new String[7];
 		  switch (tex){
@@ -146,7 +145,6 @@ public class Skybox {
 	    */ 
 	  public void draw (GL2 gl)
 	  {
-		  
 		  gl.glPushMatrix();
 	      //Down
 	     gl.glColor3f(1.0f, 1.0f, 1.0f);//éviter les interéferences sur les couleurs 
@@ -180,7 +178,7 @@ public class Skybox {
 	        //Front
 	       // gl.glColor3f(0.0f, 0.0f, 1.0f);
 	        
-	        gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[2].getTextureObject());
+	    gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[2].getTextureObject());
 	     gl.glBegin (GL2.GL_QUADS);
 	        gl.glNormal3f(0.0f, 1.0f, 0.0f);
 	        gl.glTexCoord2f(1,0);
@@ -227,7 +225,7 @@ public class Skybox {
 	        //gl.glColor3f(1.0f, 1.0f, 0.0f);
 	        
 	    gl.glBindTexture(GL2.GL_TEXTURE_2D, texture[0].getTextureObject());
-	     gl.glBegin (GL2.GL_QUADS);
+	       gl.glBegin (GL2.GL_QUADS);
 	        gl.glNormal3f(0.0f, -1.0f, 0.0f);
 	        gl.glTexCoord2f(1,1);
 	        gl.glVertex3f (depth_2, width_2, height_2);

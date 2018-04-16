@@ -78,7 +78,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
 		 * - each call to gl.glColor3f costs a lot (speed is down by two if no call!)
 		 */
 	
-		static FPSAnimator animator; 
+		static Animator animator; 
 		//  https://sites.google.com/site/justinscsstuff/jogl-tutorial-3
 		//  if you use a regular Animator object instead of the FPSAnimator, your program will render as fast as possible. 
 		//  You can, however, limit the framerate of a regular Animator by asking the graphics driver to synchronize with the 
@@ -167,7 +167,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
         	
     		_myWorld.init(dxView-1,dyView-1,landscape);
     		
-    		heightFactor = 32.0f; //64.0f; // was: 32.0f;
+    		heightFactor = 40.0f; //64.0f; // was: 32.0f;
             heightBooster = 6.0; // default: 2.0 // 6.0 makes nice high mountains.
            
     		offset = -200.0f; // was: -40.
@@ -195,7 +195,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
     		final GLCanvas canvas = new GLCanvas(caps); // original
     		
             final Frame frame = new Frame("World Of Cells");
-            animator = new FPSAnimator(canvas,60);
+            animator = new Animator(canvas);
             //Landscape myLandscape = new Landscape(dx,dy,myWorld);
             canvas.addGLEventListener(__landscape);
             canvas.addMouseListener(__landscape);// register mouse callback functions
@@ -362,7 +362,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                 if ( VIEW_FROM_ABOVE == true )
                 {
                 	// as seen from above, no rotation (debug mode)
-                	gl.glTranslatef(0.0f, 0.0f, -0.0f); // 0,0,-5
+                	gl.glTranslatef(0.0f, 0.0f, -200.0f); // 0,0,-5
                 }
                 else
                 {
@@ -388,12 +388,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                         gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
                         skybox.draw(gl);
                     }
-                }
-          
+                }         
                 //System.out.println("rotateT = " + rotateT );
-               
-               
-               
                 it++;
                 //if ( it % 30 == 0 )//&& it != 0)
                 //	movingIt++;
@@ -490,15 +486,50 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
 
                         // TODO+: diplayObjectAt(x,y,...) ==> on y gagne quoi? les smoothFactors. C'est tout. Donc on externalise?
                         
-                        if ( DISPLAY_OBJECTS == true) // calls my world with the enough info to display anything at this location.
+                       /* if ( DISPLAY_OBJECTS == true) // calls my world with the enough info to display anything at this location.
                         {
                         	float normalizeHeight = ( smoothFactor[0] + smoothFactor[1] + smoothFactor[2] + smoothFactor[3] ) / 4.f * (float)heightBooster * heightFactor;
                         	_myWorld.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-                        }
+                        }*/
                         
                 	}
                 gl.glEnd(); 
                 
+               // gl.glBegin(GL2.GL_QUADS);   
+                for (int x = 0 ; x < dxView-1 ; x++ )
+                	for (int y = 0 ; y < dyView-1 ; y++ )
+                	{
+		                double height = _myWorld.getCellHeight(x+movingX,y+movingY);
+           			 	int cellState = _myWorld.getCellValue(x+movingX,y+movingY);	
+           			 if (  VIEW_FROM_ABOVE != true)
+                     {
+	                        if ( Math.min(Math.min(x, dxView-x-1),Math.min(y, dyView-y-1)) < smoothingDistanceThreshold )
+	                        {
+	                            for ( int i = 0 ; i < 4 ; i++ )
+	                            {
+	                            	int xIt = i==1||i==2?1:0;
+	                            	int yIt = i==0||i==1?1:0;
+		                        	smoothFactor[i] = (float)
+		                        			Math.min(
+		                        					Math.min( 1.0 , (double)Math.min(x+xIt,dxView-x+xIt)/(double)smoothingDistanceThreshold ) ,  // check x-axis
+		                        					Math.min( 1.0 , (double)Math.min(y+yIt,dyView-y+yIt)/(double)smoothingDistanceThreshold )    // check y-axis
+		                        					);
+	                            }	                            	
+	                        }
+	                        else
+	                        {
+	                        	for ( int i = 0 ; i < 4 ; i++ )
+	                        		smoothFactor[i] = 1.0f;
+	                        }
+                     }
+           		  if ( DISPLAY_OBJECTS == true) // calls my world with the enough info to display anything at this location.
+                  {
+                  	float normalizeHeight = ( smoothFactor[0] + smoothFactor[1] + smoothFactor[2] + smoothFactor[3] ) / 4.f * (float)heightBooster * heightFactor;
+                  	_myWorld.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+                  }
+           		  
+        	}	
+        	//gl.glEnd(); 
 	            // TODO+: displayObjects()
                 if ( DISPLAY_OBJECTS == true) // calls my world with enough info to display anything anywhere
                 { 

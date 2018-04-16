@@ -7,12 +7,12 @@ import worlds.World;
 
 public abstract class Vie extends UniqueDynamicObject {
 	
-	protected int hp;
+	private double hp;
 	protected boolean alive;
 	
 	public Vie(int __x, int __y, World __world) {
 		super(__x, __y, __world);
-		hp=100;
+		setHp(100);
 		alive=true;
 		// TODO Auto-generated constructor stub
 	}
@@ -26,6 +26,12 @@ public abstract class Vie extends UniqueDynamicObject {
 			detaY=(2*world.getHeight()-2*detaY)/2;
 		}
 		return Math.sqrt(detaX*detaX+detaY*detaY);
+	}
+	public double getHp() {
+		return hp;
+	}
+	public void setHp(double hp) {
+		this.hp = hp;
 	}
 	
 	

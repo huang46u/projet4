@@ -34,7 +34,6 @@ public class Pluie {
 		  for(int i=0;i<2000;i++){
 			 // float[] pos={(float)(Math.random()*200),(float)(Math.random()*200),500.0f};
 			  float[] pos={(float)Math.random()*200,(float)Math.random()*200,100.0f};
-			  System.out.println(pos[0]+" , "+pos[1]+" , "+pos[2]);
 			  drops[i]= new Drop (pos,dir,world);
 		  }
 

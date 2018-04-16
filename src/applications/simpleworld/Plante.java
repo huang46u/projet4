@@ -10,7 +10,7 @@ public class Plante extends Vie{
 	
 	public Plante(int __x, int __y, World __world) {
 		super(__x, __y, __world);
-		hp=100;
+		setHp(100);
 		// TODO Auto-generated constructor stub
 	}
 	

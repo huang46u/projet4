@@ -27,7 +27,10 @@ public abstract class World {
 	Neige neige = new Neige(dir,this);
 	protected int dxCA;
 	protected int dyCA;
+	private boolean SPRING,SUMMER,AUTOMN,WINTER,RAIN=true,NEIGE;
+	
 
+	private double[] wind;
 	protected int indexCA;
 
 	//protected CellularAutomataInteger cellularAutomata; // TO BE DEFINED IN CHILDREN CLASSES
@@ -88,6 +91,7 @@ public abstract class World {
     	        }
     	        */
     		}
+    	generateWind();
     	
     	initCellularAutomata(__dxCA,__dyCA,landscape);
     	rain.init();
@@ -154,19 +158,19 @@ public abstract class World {
     	for ( int i = 0 ; i < plante.size(); i++ ){
     		plante.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}*/
-    	/*for ( int i = 0 ; i < proie.size(); i++ ){
+    	for ( int i = 0 ; i < proie.size(); i++ ){
     		proie.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
     	for ( int i = 0 ; i < predator.size(); i++ ){
-    		
 	    	predator.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-	    	
-    	}*/
-    	
-    	/*rain.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
-    	rain.background();*/
-		neige.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
+    	}
+    	if(Rainning()){
+    	rain.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
+    	rain.background();}
+		if(Snowing()){
+    	neige.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
     	neige.background();
+    	}
 		//predator.get(0).displayUniqueObject(_myWorld, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 	}
     
@@ -185,5 +189,38 @@ public abstract class World {
 	public double getMaxEverHeight() { return this.maxEverHeightValue; }
 	public double getMinEverHeight() { return this.minEverHeightValue; }
 	
+	public double[] getWind(){
+		return wind;
+	}
+	
+	public boolean isSPRING() {
+		return SPRING;
+	}
+
+	public boolean isSUMMER() {
+		return SUMMER;
+	}
+
+	public boolean isAUTOMN() {
+		return AUTOMN;
+	}
+
+	public boolean isWINTER() {
+		return WINTER;
+	}
+	private void generateWind(){
+		wind=new double[2];
+		wind[0]=(Math.random()*2)-1;
+		wind[1]=(Math.random()*2)-1;
+		System.out.println("windx: "+wind[0]);
+		System.out.println("windy; "+wind[1]);
+	}
+	
+	public boolean Rainning(){
+		return RAIN;
+	}
+	public boolean Snowing(){
+		return NEIGE;
+	}
 
 }

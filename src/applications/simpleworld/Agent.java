@@ -11,6 +11,13 @@ import objects.UniqueDynamicObject;
 import worlds.World;
 
 public abstract class Agent extends Vie {
+	public double getEnergy() {
+		return energy;
+	}
+	public void setEnergy(double energy) {
+		this.energy = energy;
+	}
+
 	protected double energy;
 	public Agent ( int __x , int __y, World __world )
 	{

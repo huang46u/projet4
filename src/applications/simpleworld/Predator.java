@@ -12,7 +12,7 @@ public class Predator extends Agent{
 	}
 	
 	public Proie rechercher_Proie(){
-		double min_dis=Double.MAX_VALUE;
+		double min_dis=Double.MAX_VALUE; 
 		Proie p=null;
 		for(int i=0;i<world.getProie().size();i++){
 			double dis=distance(world.getProie().get(i));
@@ -128,7 +128,7 @@ public class Predator extends Agent{
 				this.x=p.getCoordinate()[0];
 				this.y=p.getCoordinate()[1];
 				p.alive=false;
-				hp+=30;
+				setHp(getHp() + 30);
 		}
 	}
 	
@@ -136,15 +136,14 @@ public class Predator extends Agent{
 	public void step() {
 		if ( world.getIteration() % 60 == 0 ){
 		
-			hp-=0.1;
+			setHp(getHp() - 0.1);
 			energy-=0.1;
 			if(energy<=20){
 				dormir();
 				return;
 			}
-			if(hp<80&& world.getProie().size()!=0){
+			if(getHp()<80&& world.getProie().size()!=0){
 				Proie p=rechercher_Proie();
-				
 					if(peut_manger(p)){
 						manger(p);
 					}

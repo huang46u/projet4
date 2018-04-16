@@ -27,8 +27,9 @@ public class WorldOfTrees extends World {
 	        	float color[] = new float[3];
 
 	        	float height = (float) this.getCellHeight(x, y);
+	        	System.out.println("x: " +x+" y: "+y+" height: " +height); 
 		    	
-		        if ( height >= 0.0 )
+		        if ( height >= 0.0&&height <0.10)
 		        {
 		        	// snowy mountains
 		        	/*
@@ -43,6 +44,13 @@ public class WorldOfTrees extends World {
 					color[1] = 0.9f + 0.1f * height / ( (float)this.getMaxEverHeight() );
 					color[2] = height / ( (float)this.getMaxEverHeight() );
 					/**/
+		        }
+		        
+		        else if(height>0.10){
+		        	color[0] = 0.90f + 0.1f * height / ( (float)this.getMaxEverHeight() );
+					color[1] = 0.01f*(height / ( (float)this.getMaxEverHeight() ));
+					color[2] = 0.01f*(height / ( (float)this.getMaxEverHeight() ));
+		        	
 		        }
 		        else
 		        {
@@ -140,7 +148,8 @@ public class WorldOfTrees extends World {
 	public void displayObjectAt(World _myWorld, GL2 gl, int cellState, int x,
 			int y, double height, float offset,
 			float stepX, float stepY, float lenX, float lenY,
-			float normalizeHeight) 
+			float normalizeHeight)
+	
 	{
 		switch ( cellState )
 		{

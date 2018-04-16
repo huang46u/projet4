@@ -30,10 +30,12 @@ public class ForestCA extends CellularAutomataInteger {
     		{
     			if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
     			{
-    				if ( Math.random() < 0.53 ) // was: 0.71
-    					this.setCellState(x, y, 1); // tree
-    				else
-    					this.setCellState(x, y, 0); // empty
+    				if(_cellsHeightValuesCA.getCellState(x,y) <= 0.10 ){// volcan
+    					if ( Math.random() < 0.13 ) // was: 0.71
+    						this.setCellState(x, y, 1); // tree
+    					else
+    						this.setCellState(x, y, 0); // empty
+    				}
     			}
     			else
     			{
@@ -43,7 +45,6 @@ public class ForestCA extends CellularAutomataInteger {
     	this.swapBuffer();
 
 	}
-
 	public void step()
 	{
     	for ( int i = 0 ; i != _dx ; i++ )
@@ -54,7 +55,87 @@ public class ForestCA extends CellularAutomataInteger {
 	    			if ( this.getCellState(i,j) == 1 ) // tree?
 	    			{
 	    				// check if neighbors are burning
-	    				if ( 
+	    				//Wind North-EST
+	    				if(world.getWind()[0]>0&&world.getWind()[1]>0){
+	    					if(
+	    							this.getCellState( (i+_dx-1)%(_dx) , j ) == 2 ||
+	    							this.getCellState( (i+_dx-1)%(_dx) , (j+_dy-1)%(_dy) ) == 2 ||
+	    							this.getCellState( i , (j+_dy-1)%(_dy) ) == 2 )
+	    					{
+	    								this.setCellState(i,j,2);
+	    					}
+	    					else{
+		    					if ( Math.random() < 0.00001 ) // spontaneously take fire ?
+		    					{
+		    						this.setCellState(i,j,2);
+		    					}
+		    					else
+		    					{
+		    						this.setCellState(i,j,1); // copied unchanged
+		    					}
+	    					}
+	    				}
+	    				//Wind South-EST
+	    				if(world.getWind()[0]>0&&world.getWind()[1]<0){
+	    					if(
+	    							this.getCellState( (i+_dx-1)%(_dx) , j ) == 2 ||
+	    							this.getCellState( (i+_dx-1)%(_dx) , (j+_dy+1)%(_dy) ) == 2 ||
+	    							this.getCellState( i , (j+_dy+1)%(_dy) ) == 2 )
+	    					{
+	    								this.setCellState(i,j,2);
+	    					}
+	    					else{
+		    					if ( Math.random() < 0.00001 ) // spontaneously take fire ?
+		    					{
+		    						this.setCellState(i,j,2);
+		    					}
+		    					else
+		    					{
+		    						this.setCellState(i,j,1); // copied unchanged
+		    					}
+	    					}
+	    				}
+	    				//Wind SOUTH-WEST
+	    				if(world.getWind()[0]<0&&world.getWind()[1]<0){
+	    					if(
+	    							this.getCellState( (i+_dx+1)%(_dx) , j ) == 2 ||
+	    							this.getCellState( (i+_dx+1)%(_dx) , (j+_dy+1)%(_dy) ) == 2 ||
+	    							this.getCellState( i , (j+_dy+1)%(_dy) ) == 2 )
+	    					{
+	    								this.setCellState(i,j,2);
+	    					}
+	    					else{
+		    					if ( Math.random() < 0.00001 ) // spontaneously take fire ?
+		    					{
+		    						this.setCellState(i,j,2);
+		    					}
+		    					else
+		    					{
+		    						this.setCellState(i,j,1); // copied unchanged
+		    					}
+	    					}
+	    				}
+	    				//Wind North-West
+	    				if(world.getWind()[0]<0&&world.getWind()[1]>0){
+	    					if(
+	    							this.getCellState( (i+_dx+1)%(_dx) , j ) == 2 ||
+	    							this.getCellState( (i+_dx+1)%(_dx) , (j+_dy-1)%(_dy) ) == 2 ||
+	    							this.getCellState( i , (j+_dy-1)%(_dy) ) == 2 )
+	    					{
+	    								this.setCellState(i,j,2);
+	    					}
+	    					else{
+		    					if ( Math.random() < 0.00001 ) // spontaneously take fire ?
+		    					{
+		    						this.setCellState(i,j,2);
+		    					}
+		    					else
+		    					{
+		    						this.setCellState(i,j,1); // copied unchanged
+		    					}
+	    					}
+	    				}
+	    				/*if ( 
 	    						this.getCellState( (i+_dx-1)%(_dx) , j ) == 2 ||
 	    						this.getCellState( (i+_dx+1)%(_dx) , j ) == 2 ||
 	    						this.getCellState( i , (j+_dy+1)%(_dy) ) == 2 ||
@@ -72,7 +153,7 @@ public class ForestCA extends CellularAutomataInteger {
 	    					else
 	    					{
 	    						this.setCellState(i,j,1); // copied unchanged
-	    					}
+	    					}*/
 	    			}
 	    			else
 	    			{
