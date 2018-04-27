@@ -27,7 +27,7 @@ public abstract class World {
 	Neige neige = new Neige(dir,this);
 	protected int dxCA;
 	protected int dyCA;
-	private boolean SPRING,SUMMER,AUTOMN,WINTER,RAIN=true,NEIGE;
+	private boolean SPRING,SUMMER,AUTOMN,WINTER,RAIN,NEIGE;
 	
 
 	private double[] wind;
@@ -92,10 +92,15 @@ public abstract class World {
     	        */
     		}
     	generateWind();
-    	
     	initCellularAutomata(__dxCA,__dyCA,landscape);
     	rain.init();
     	neige.init();
+    	SPRING=true;
+    	SUMMER=false;
+    	AUTOMN=false;
+    	WINTER=false;
+    	RAIN=false;
+    	NEIGE=false;;
     }
     
     
@@ -104,6 +109,7 @@ public abstract class World {
     	stepCellularAutomata();
     	stepVie();
     	iteration++;
+    	
     }
     
     public int getIteration()
@@ -151,18 +157,19 @@ public abstract class World {
 	public void displayUniqueObjects(World _myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset,
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight) 
 	{
-    	/*for ( int i = 0 ; i < uniqueObjects.size(); i++ ){
-    		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-    	}
+    	
     	
     	for ( int i = 0 ; i < plante.size(); i++ ){
     		plante.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-    	}*/
+    	}
     	for ( int i = 0 ; i < proie.size(); i++ ){
     		proie.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
     	for ( int i = 0 ; i < predator.size(); i++ ){
 	    	predator.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+    	}
+    	for ( int i = 0 ; i < uniqueObjects.size(); i++ ){
+    		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
     	if(Rainning()){
     	rain.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);

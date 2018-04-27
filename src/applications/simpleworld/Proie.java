@@ -7,6 +7,14 @@ import com.jogamp.opengl.GL2;
 import worlds.World;
 
 public class Proie extends Agent {
+	private Plante cible;
+	public Plante getCible() {
+		return cible;
+	}
+
+	public void setCible(Plante cible) {
+		this.cible = cible;
+	}
 
 	public Proie(int __x, int __y, World __world) {
 		super(__x, __y, __world);
@@ -32,7 +40,7 @@ public class Proie extends Agent {
 	
 	@Override
 	public void step() {
-		if ( world.getIteration() % 10 == 0 ){
+		if ( world.getIteration() % 60 == 0 ){
 		
 			setHp(getHp() - 0.1);
 			energy-=0.1;
@@ -305,7 +313,7 @@ public class Proie extends Agent {
 	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
 	if ( y2 < 0) y2+=myWorld.getHeight();
 
-	float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
+	float height = Math.max (0,(float)myWorld.getCellHeight(x, y));
 	
 	gl.glPushMatrix();
 		gl.glTranslatef(offset+x2*stepX, offset+y2*stepY, height*normalizeHeight);

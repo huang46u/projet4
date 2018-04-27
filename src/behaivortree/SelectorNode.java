@@ -41,9 +41,10 @@ public class SelectorNode extends CompositeNode{
 				if(result==Failed){
 					continue;		
 				}
+				return Success;
 			}
-			return Success;
-		
+			return Failed;
+			
 	}
 
 }

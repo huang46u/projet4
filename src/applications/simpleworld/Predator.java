@@ -5,6 +5,14 @@ import com.jogamp.opengl.GL2;
 import worlds.World;
 
 public class Predator extends Agent{
+	private Proie cible;
+	public Proie getCible() {
+		return cible;
+	}
+
+	public void setCible(Proie cible) {
+		this.cible = cible;
+	}
 
 	public Predator(int __x, int __y, World __world) {
 		super(__x, __y, __world);

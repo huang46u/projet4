@@ -40,8 +40,9 @@ public class SequenceNode extends CompositeNode {
 			if(result==Success){
 				continue;
 			}
+			return Failed;
 		}
-		return Failed;
+		return Success;
 		
 	}
 

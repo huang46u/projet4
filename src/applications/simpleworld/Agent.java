@@ -30,18 +30,30 @@ public abstract class Agent extends Vie {
 	};
 	
 	public void bouge(){
+		int d_pX=( this.x + 1 ) % this.world.getWidth() ;
+		int d_pY= ( this.y + 1 ) % this.world.getHeight() ;
+		int d_mX=( this.x - 1 +  this.world.getWidth() ) % this.world.getWidth();
+		int d_mY=( this.y - 1 +  this.world.getHeight() ) % this.world.getHeight() ;
 		double dice = Math.random();
-		if ( dice < 0.25 )
-			this.x = ( this.x + 1 ) % this.world.getWidth() ;
+		if ( dice < 0.25 ){
+			
+			if((world.getCellHeight(d_pX, y)>0)&&(world.getCellHeight(d_pX, y)<0.8))
+			this.x = d_pX ;
+			}
 		else
-			if ( dice < 0.5 )
-				this.x = ( this.x - 1 +  this.world.getWidth() ) % this.world.getWidth() ;
+			if ( dice < 0.5 ){
+				if((world.getCellHeight(d_mX, y)>0)&&(world.getCellHeight(d_mX, y)<0.8))
+				this.x =d_mX;
+			}
 			else
-				if ( dice < 0.75 )
-					this.y = ( this.y + 1 ) % this.world.getHeight() ;
-				else
-					this.y = ( this.y - 1 +  this.world.getHeight() ) % this.world.getHeight() ;
-	
+				if ( dice < 0.75 ){
+					if((world.getCellHeight(x,d_pY)>0)&&(world.getCellHeight(x, d_pY)<0.8))
+					this.y = d_pY ;
+					}
+				else{
+					if((world.getCellHeight(x, d_mY)>0)&&(world.getCellHeight(x, d_mY)<0.8))
+					this.y = d_mY;
+				}
 		
 	}	
 	

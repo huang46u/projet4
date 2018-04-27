@@ -1,6 +1,7 @@
-package behaivortree;
+package behaivortree.actionnode;
 
 import applications.simpleworld.Agent;
+import behaivortree.ActionNode;
 import worlds.World;
 
 public class NodeSleep extends ActionNode {
@@ -13,7 +14,7 @@ public class NodeSleep extends ActionNode {
 
 	@Override
 	public int run() {
-		animal.setEnergy(animal.getEnergy()+1);
+		animal.setEnergy(animal.getEnergy()+10);
 		if(animal.getEnergy()<100){
 			System.out.println("sleep");
 			return Running;

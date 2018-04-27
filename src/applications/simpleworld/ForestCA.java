@@ -30,8 +30,8 @@ public class ForestCA extends CellularAutomataInteger {
     		{
     			if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
     			{
-    				if(_cellsHeightValuesCA.getCellState(x,y) <= 0.10 ){// volcan
-    					if ( Math.random() < 0.13 ) // was: 0.71
+    				if(_cellsHeightValuesCA.getCellState(x,y) <= 0.05 ){// volcan
+    					if ( Math.random() < 0.3 ) // was: 0.71
     						this.setCellState(x, y, 1); // tree
     					else
     						this.setCellState(x, y, 0); // empty

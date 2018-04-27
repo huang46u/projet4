@@ -5,14 +5,14 @@ import objects.UniqueDynamicObject;
 import objects.UniqueObject;
 import worlds.World;
 
-public abstract class Vie extends UniqueDynamicObject {
+public abstract class Vie extends UniqueDynamicObject{
 	
 	private double hp;
 	protected boolean alive;
 	
 	public Vie(int __x, int __y, World __world) {
 		super(__x, __y, __world);
-		setHp(100);
+		hp=100;
 		alive=true;
 		// TODO Auto-generated constructor stub
 	}

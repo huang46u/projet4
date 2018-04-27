@@ -1,6 +1,7 @@
-package behaivortree;
+package behaivortree.conditionnode;
 
 import applications.simpleworld.Agent;
+import behaivortree.ConditionNode;
 import worlds.World;
 
 public class NodeTired extends ConditionNode {

@@ -24,6 +24,7 @@ import objects.Monolith;
 import skybox.Skybox;
 import landscapegenerator.LoadFromFileLandscape;
 import landscapegenerator.PerlinNoiseLandscapeGenerator;
+import lsystem.Tree;
 
 /*
  * TODO
@@ -179,7 +180,6 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
             smoothFactor = new float[4];
             for ( int i = 0 ; i < 4 ; i++ )
             	smoothFactor[i] = 1.0f;
-            
             smoothingDistanceThreshold = 30; //30;
             
         }
@@ -291,6 +291,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                 gl.glClear(GL.GL_COLOR_BUFFER_BIT);
                 gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
                 gl.glLoadIdentity();
+          
 
                 // ** display FPS on screen
                 
@@ -522,6 +523,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
 	                        		smoothFactor[i] = 1.0f;
 	                        }
                      }
+           			 
            		  if ( DISPLAY_OBJECTS == true) // calls my world with the enough info to display anything at this location.
                   {
                   	float normalizeHeight = ( smoothFactor[0] + smoothFactor[1] + smoothFactor[2] + smoothFactor[3] ) / 4.f * (float)heightBooster * heightFactor;
@@ -714,6 +716,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
 				break;
 			case KeyEvent.VK_G:
 				GOD_MOD =!GOD_MOD;
+				break;
+			case KeyEvent.VK_I:
+				skybox.setTexturestat((skybox.getTexturestat()+1)%skybox.getTexture().length);
 				break;
 			case KeyEvent.VK_H:
 				System.out.println(

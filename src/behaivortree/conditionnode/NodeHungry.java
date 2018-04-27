@@ -1,6 +1,7 @@
-package behaivortree;
+package behaivortree.conditionnode;
 
 import applications.simpleworld.Agent;
+import behaivortree.ConditionNode;
 import worlds.World;
 
 public class NodeHungry extends ConditionNode {
@@ -12,8 +13,9 @@ public class NodeHungry extends ConditionNode {
 
 	@Override
 	public int run() {
-		if(animal.getHp()>30)
+		if(animal.getHp()>30){
 			return False;
+		}
 		return True;
 	}
 

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.jogamp.opengl.GL2;
 
+import lsystem.Tree;
 import objects.*;
 import worlds.World;
 
@@ -27,7 +28,6 @@ public class WorldOfTrees extends World {
 	        	float color[] = new float[3];
 
 	        	float height = (float) this.getCellHeight(x, y);
-	        	System.out.println("x: " +x+" y: "+y+" height: " +height); 
 		    	
 		        if ( height >= 0.0&&height <0.10)
 		        {
@@ -75,13 +75,13 @@ public class WorldOfTrees extends World {
     	for(int i=0;i<5;i++){
     	predator.add(new Predator((int)(Math.random()*200),(int)(Math.random()*200),this));
     	
-
+    	
     	proie.add(new Proie((int)(Math.random()*200),(int)(Math.random()*200),this));
     	}
     	/*predator.add(new Predator(10,10,this));
     	proie.add(new Proie(190,190,this));
     	proie.add(new Proie(40,40,this));*/
-    	
+    	plante.add(new Plante(50,50,this));
     }
     
     protected void initCellularAutomata(int __dxCA, int __dyCA, double[][] landscape)
@@ -149,7 +149,6 @@ public class WorldOfTrees extends World {
 			int y, double height, float offset,
 			float stepX, float stepY, float lenX, float lenY,
 			float normalizeHeight)
-	
 	{
 		switch ( cellState )
 		{
