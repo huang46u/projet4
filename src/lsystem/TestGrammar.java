@@ -12,7 +12,11 @@ public class TestGrammar {
 		System.out.println(a.find(""+as));
 		System.out.println(a.getGeneration());
 		a.setStart("X");
-		a.iterate(2);
+		a.iterate(1);
+		System.out.println(a.getResult());
+		a.iterate(1);
+		System.out.println(a.getResult());
+		a.setResult(a.getPrecRes());
 		System.out.println(a.getResult());
 	}
 

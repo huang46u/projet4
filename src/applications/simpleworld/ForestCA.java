@@ -31,7 +31,7 @@ public class ForestCA extends CellularAutomataInteger {
     			if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
     			{
     				if(_cellsHeightValuesCA.getCellState(x,y) <= 0.05 ){// volcan
-    					if ( Math.random() < 0.3 ) // was: 0.71
+    					if ( Math.random() < 0.4 ) // was: 0.71
     						this.setCellState(x, y, 1); // tree
     					else
     						this.setCellState(x, y, 0); // empty
@@ -159,11 +159,11 @@ public class ForestCA extends CellularAutomataInteger {
 	    			{
 	        				if ( this.getCellState( i , j ) == 2 ) // burning?
 	        				{
-	        					this.setCellState(i,j,3); // burnt
+	        					this.setCellState(i, j, 3); // burnt
 	        				}
 	        				else
 	        				{
-	        					this.setCellState(i,j, this.getCellState(i,j) ); // copied unchanged
+	        					this.setCellState(i,j, 0); // copied unchanged
 	        				}
 	    			}
 	    			
@@ -171,6 +171,7 @@ public class ForestCA extends CellularAutomataInteger {
 	    			switch ( this.getCellState(i, j) )
 	    			{
 	    				case 0:
+	    					
 	    					break;
 	    				case 1:
 	    					color[0] = 0.f;
@@ -195,6 +196,16 @@ public class ForestCA extends CellularAutomataInteger {
 	    					System.out.println(" (at: " + i + "," + j + " -- height: " + this.world.getCellHeight(i,j) + " )");
 	    			}	   
 	    			this.world.cellsColorValues.setCellState(i, j, color);
+    			}
+    			else{
+    				if(Math.random()<0.0001){
+    					if ( _cellsHeightValuesCA.getCellState(i,j) >= 0 )
+    	    			{
+    	    				if(_cellsHeightValuesCA.getCellState(i,j) <= 0.05 ){
+    	    					this.setCellState(i, j, 1);
+    	    				}
+    				}
+    			}
     			}
     		}
     	this.swapBuffer();

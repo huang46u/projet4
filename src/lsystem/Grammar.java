@@ -9,6 +9,7 @@ public class Grammar {
 	private int level;
 	private String start;
 	private String result;
+	private String precRes;//Etat precedent
 	
 	private HashMap<String,ArrayList<String>> generation;
 	
@@ -34,10 +35,10 @@ public class Grammar {
 	public String search(String start){
 		
 		if(find(start)){
-			if(Math.random()>0.8){
+			//if(Math.random()>0.5){
 			int index=(int)(Math.random()*100)%(generation.get(start).size());
 			return generation.get(start).get(index);
-				}
+				//}
 		}
 		return start;
 	}
@@ -55,16 +56,16 @@ public class Grammar {
 		result="";
 	}
 	public void iterate(int num){
-		
 		if(result==""){
 		result=start;
 		}
-		
+		precRes=result;//Etat précédent
 		for(int i=0;i<num;i++){
 			String tmp="";
 			for(int j=0;j<result.length();j++){	
 				String s=""+result.charAt(j);
 					tmp+=search(s);
+				
 			}
 			result=tmp;
 		}
@@ -85,11 +86,17 @@ public class Grammar {
 	public String getStart() {
 		return start;
 	}
+	public void setResult(String result){
+		this.result=result;
+	}
 	public void setStart(String start) {
 		this.start = start;
 	}
 	public String getResult() {
 		return result;
+	}
+	public String getPrecRes() {
+		return precRes;
 	}
 	public HashMap<String, ArrayList<String>> getGeneration() {
 		return generation;

@@ -29,6 +29,9 @@ public class SelectorNode extends CompositeNode{
 				}
 				return result;
 			}
+			else{
+				return Running;
+			}
 			
 		}
 			for(int i=0;i<this.children.size();i++){

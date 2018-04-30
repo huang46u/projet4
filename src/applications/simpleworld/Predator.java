@@ -2,10 +2,21 @@ package applications.simpleworld;
 
 import com.jogamp.opengl.GL2;
 
+import behaivortree.CompositeNode;
+import behaivortree.SelectorNode;
+import behaivortree.SequenceNode;
+import behaivortree.actionnode.NodeChass;
+import behaivortree.actionnode.NodeMove;
+import behaivortree.actionnode.NodeSleep;
+import behaivortree.conditionnode.NodeHungry;
+import behaivortree.conditionnode.NodeIsSummer;
+import behaivortree.conditionnode.NodeIsWinter;
+import behaivortree.conditionnode.NodeTired;
 import worlds.World;
 
 public class Predator extends Agent{
 	private Proie cible;
+	private CompositeNode AI;
 	public Proie getCible() {
 		return cible;
 	}
@@ -16,10 +27,11 @@ public class Predator extends Agent{
 
 	public Predator(int __x, int __y, World __world) {
 		super(__x, __y, __world);
+		this.generateBehaivortree();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Proie rechercher_Proie(){
+	/*public Proie rechercher_Proie(){
 		double min_dis=Double.MAX_VALUE; 
 		Proie p=null;
 		for(int i=0;i<world.getProie().size();i++){
@@ -139,13 +151,15 @@ public class Predator extends Agent{
 				setHp(getHp() + 30);
 		}
 	}
+	*/
+	
 	
 	@Override
 	public void step() {
-		if ( world.getIteration() % 60 == 0 ){
-		
-			setHp(getHp() - 0.1);
-			energy-=0.1;
+		if ( world.getIteration() % 10 == 0 ){
+			//AI.run();
+			setHp(getHp() - 0.01);
+			/*energy-=0.1;
 			if(energy<=20){
 				dormir();
 				return;
@@ -161,7 +175,7 @@ public class Predator extends Agent{
 			}
 			else{
 				bouge();
-			}	
+			}*/
 		}
 	}
 
@@ -244,6 +258,39 @@ public class Predator extends Agent{
 	        gl.glEnd();
 	        gl.glPopMatrix();
 	    }
+
+	@Override
+	public void generateBehaivortree() {
+		AI=new SelectorNode();
+		CompositeNode Summer=new SequenceNode();
+		CompositeNode Winter=new SequenceNode(); 
+		NodeIsSummer Node_Summer=new NodeIsSummer(this,world);
+		NodeIsWinter Node_Winter=new NodeIsWinter(this,world);
+		NodeChass Node_Chass=new NodeChass(this,world);
+		NodeHungry Node_Hungry=new NodeHungry(this,world);
+		NodeMove Node_move=new NodeMove(this,world);
+		NodeSleep Node_Sleep=new NodeSleep(this,world);
+		NodeTired Node_Tired=new NodeTired(this,world);
+		CompositeNode Comportement=new SelectorNode();
+		CompositeNode Sleep=new SequenceNode();
+		CompositeNode Eat=new SequenceNode();
+		CompositeNode Chass=new SequenceNode();
+		Comportement.addNode(Sleep);
+		Sleep.addNode(Node_Tired);
+		Sleep.addNode(Node_Sleep);
+		Comportement.addNode(Eat);
+		Eat.addNode(Node_Hungry);
+		Eat.addNode(Chass);
+		Chass.addNode(Node_Chass);
+		Comportement.addNode(Node_move);
+		Summer.addNode(Node_Summer);
+		Summer.addNode(Comportement);
+		Winter.addNode(Node_Winter);
+		Winter.addNode(Node_Sleep);
+		AI.addNode(Summer);
+		AI.addNode(Winter);
+		
+	}
 
 
 

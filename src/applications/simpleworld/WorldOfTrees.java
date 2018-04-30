@@ -8,7 +8,6 @@ import java.util.Random;
 
 import com.jogamp.opengl.GL2;
 
-import lsystem.Tree;
 import objects.*;
 import worlds.World;
 
@@ -29,28 +28,26 @@ public class WorldOfTrees extends World {
 
 	        	float height = (float) this.getCellHeight(x, y);
 		    	
-		        if ( height >= 0.0&&height <0.10)
+		        if ( height >= 0.0&&height <0.11)
 		        {
 		        	// snowy mountains
-		        	/*
-		        	color[0] = height / (float)this.getMaxEverHeight();
-					color[1] = height / (float)this.getMaxEverHeight();
-					color[2] = height / (float)this.getMaxEverHeight();
-					/**/
+		    
+			        	//color[0] = height / (float)this.getMaxEverHeight();
+						//color[1] = height / (float)this.getMaxEverHeight();
+						//color[2] = height / (float)this.getMaxEverHeight();
 		        	
 					// green mountains
 		        	
-		        	color[0] = height / ( (float)this.getMaxEverHeight() );
-					color[1] = 0.9f + 0.1f * height / ( (float)this.getMaxEverHeight() );
-					color[2] = height / ( (float)this.getMaxEverHeight() );
-					/**/
-		        }
+			        	color[0] = height / ( (float)this.getMaxEverHeight() );
+						color[1] = 0.9f + 0.1f * height / ( (float)this.getMaxEverHeight() );
+						color[2] = height / ( (float)this.getMaxEverHeight() );
+					/**/}
 		        
-		        else if(height>0.10){
+		        
+		        else if(height>0.10){//volcan
 		        	color[0] = 0.90f + 0.1f * height / ( (float)this.getMaxEverHeight() );
 					color[1] = 0.01f*(height / ( (float)this.getMaxEverHeight() ));
 					color[2] = 0.01f*(height / ( (float)this.getMaxEverHeight() ));
-		        	
 		        }
 		        else
 		        {
@@ -72,16 +69,35 @@ public class WorldOfTrees extends World {
     	}
     	
     	//predator.add(new Predator(100,100,this));
+    	Random r= new Random();
     	for(int i=0;i<5;i++){
-    	predator.add(new Predator((int)(Math.random()*200),(int)(Math.random()*200),this));
     	
-    	
-    	proie.add(new Proie((int)(Math.random()*200),(int)(Math.random()*200),this));
+    		int x=r.nextInt(200);
+    		int y=r.nextInt(200);
+    		if(this.getCellHeight(x, y)>0&&this.getCellHeight(x, y)<0.11)
+    			predator.add(new Predator(x,y,this));
     	}
-    	/*predator.add(new Predator(10,10,this));
-    	proie.add(new Proie(190,190,this));
-    	proie.add(new Proie(40,40,this));*/
-    	plante.add(new Plante(50,50,this));
+    	/*for(int i=0;i<5;i++){
+        	
+        	int x=r.nextInt(200);
+        	int y=r.nextInt(200);
+        	if(this.getCellHeight(x, y)>0&&this.getCellHeight(x, y)<0.11)
+        		proie.add(new Proie(x,y,this));
+        	}*/
+    	
+    	for(int i=0;i<5;i++){
+        	
+        	int x=r.nextInt(200);
+        	int y=r.nextInt(200);
+        	if(this.getCellHeight(x, y)>0&&this.getCellHeight(x, y)<0.11)
+        		plante.add(new Plante(x,y,this));
+        	}
+
+    		
+    	/*predator.add(new Predator(80,80,this));
+    	proie.add(new Proie(190,190,this));*/
+    	proie.add(new Proie(40,40,this));
+    	
     }
     
     protected void initCellularAutomata(int __dxCA, int __dyCA, double[][] landscape)
@@ -90,6 +106,7 @@ public class WorldOfTrees extends World {
     	cellularAutomata.init();
     }
     
+   
     protected void stepCellularAutomata()
     {
     	if ( iteration%10 == 0 )
@@ -98,6 +115,7 @@ public class WorldOfTrees extends World {
     
     protected void stepVie()
     {
+    	
     	// nothing to do.
     	int length=predator.size();
     	for ( int i = 0 ; i < length ; i++ )
@@ -113,7 +131,6 @@ public class WorldOfTrees extends World {
     	length= this.proie.size();
     	for ( int i = 0 ; i <length  ; i++ )
     	{
-    		
         		if(proie.get(i).alive){
         		this.proie.get(i).step();
         		}

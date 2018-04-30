@@ -18,13 +18,13 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import applications.simpleworld.Predator;
+import applications.simpleworld.Tree;
 import climat.Drop;
 import objects.CommonObject;
 import objects.Monolith;
 import skybox.Skybox;
 import landscapegenerator.LoadFromFileLandscape;
 import landscapegenerator.PerlinNoiseLandscapeGenerator;
-import lsystem.Tree;
 
 /*
  * TODO
@@ -63,7 +63,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
 		
 		final static boolean DISPLAY_FPS = true; // on-screen display
 		
-		static Skybox skybox=new Skybox();
+		 Skybox skybox;
 		
 		/*
 		 * benchmarking 
@@ -163,7 +163,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
         {
        		dxView = landscape.length;
     		dyView = landscape[0].length;
-
+    		skybox=new Skybox(_myWorld);
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
         	
     		_myWorld.init(dxView-1,dyView-1,landscape);
@@ -247,8 +247,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                 gl.glClearDepth(1.0f);
                 gl.glEnable(GL.GL_DEPTH_TEST);
                 gl.glDepthFunc(GL.GL_LEQUAL);
-                gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-                
+                gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);  
                 // Culling - display only triangles facing the screen
                 gl.glCullFace(GL.GL_FRONT);
                 gl.glEnable(GL.GL_CULL_FACE);
@@ -363,14 +362,14 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                 if ( VIEW_FROM_ABOVE == true )
                 {
                 	// as seen from above, no rotation (debug mode)
-                	gl.glTranslatef(0.0f, 0.0f, -200.0f); // 0,0,-5
+                	gl.glTranslatef(0.0f, 0.0f, -250.0f); // 0,0,-5
                 }
                 else
                 {
                 	// continuous rotation (default view) 
                     if(GOD_MOD){
                 	gl.glPushMatrix();
-                	gl.glTranslatef(0.0f, -50.0f, -300.0f); // 0,0,-5
+                	gl.glTranslatef(0.0f, -50.0f, -250.0f); // 0,0,-5
                     
                     gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
                     skybox.draw(gl);
@@ -387,6 +386,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener,Mo
                     	gl.glTranslatef(0.0f, -44.0f, -130.0f); // 0,0,-5
                         gl.glRotatef(rotate1, 0.0f, 1.0f, 0.0f);
                         gl.glRotatef(-90.f, 1.0f, 0.0f, 0.0f);
+                        skybox.changeTex();
                         skybox.draw(gl);
                     }
                 }         

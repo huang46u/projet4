@@ -13,9 +13,12 @@ public class NodeHungry extends ConditionNode {
 
 	@Override
 	public int run() {
+		System.out.println("hp: "+animal.getHp());
 		if(animal.getHp()>30){
+			System.out.println("don't hungry");
 			return False;
 		}
+		System.out.println("hungry");
 		return True;
 	}
 

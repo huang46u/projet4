@@ -9,7 +9,6 @@ import graphics.Landscape;
 public class MyEcosystem {
     
 	public static void main(String[] args) {
-
 		WorldOfTrees myWorld = new WorldOfTrees();
 		// param�tres:
 		// 1: le "monde" (ou sont d�finis vos automates cellulaires et agents

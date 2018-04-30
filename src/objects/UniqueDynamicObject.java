@@ -33,6 +33,14 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 		return coordinate;
 	}
 	
+	public void setCoordinateX(int x){
+		this.x=x;
+	}
+	
+	public void setCoordinateY(int y){
+		this.y=y;
+	}
+	
 	abstract public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight );
 
 }

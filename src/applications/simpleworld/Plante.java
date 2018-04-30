@@ -9,37 +9,29 @@ public class Plante extends Vie{
 	public float getLength() {
 		return length;
 	}
-
 	public void setLength(float length) {
 		this.length = length;
 	}
-
-
 	private Grammar grammar;
 	private float length;
 	private float[] pos={0.0f,0.0f,length/2};
-	
-	
 	
 	public Plante(int __x, int __y, World __world) {
 		super(__x, __y, __world);
 		setHp(100);
 		this.initgeneration();
-		length=10.0f;
-	
+		length=10.f;
+		
+		
 		// TODO Auto-generated constructor stub
-	}
-	
-	
-	
+	}	
 	public void initgeneration(){
 		grammar=new Grammar("Test");
-		grammar.addGeneration("F","F[$[^X][&X]][%[^X][&X]]");
-		grammar.addGeneration("F","F[%[^X][&X]]");
-		grammar.addGeneration("X","F[$[^X][&X]]");
+		grammar.addGeneration("X","F[$$[^X][&X]%%[^X][&X]]");
+		grammar.addGeneration("X","F[%%[^^X][&X]%%[^X][&X]]");
+		grammar.addGeneration("X","F[$[^X][$X]^[%X][&X]]");
 		//grammar.addGeneration("F", "FF");
-		grammar.setStart("F");
-		System.out.println(grammar.getResult());
+		grammar.setStart("X");
 	}
 	
 	public void draw(double hauteur,double rayon,double resolution,GL2 gl){
@@ -60,19 +52,14 @@ public class Plante extends Vie{
 	    
 	    gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 	    for(int i=0;i<resolution;i++){
-	    	
 	    	double ang=(2*Math.PI*i)/resolution;
 	    	double cosang=Math.cos(ang);
 	    	double sinang=Math.sin(ang);
-	    	
-	    	
 	    	//gl.glNormal3d(cosang,sinang, 0);
-	    	
+
 	    	gl.glVertex3d(rayon*cosang,rayon*sinang,hauteur/2);
 	    	gl.glVertex3d(rayon*cosang,rayon*sinang,-hauteur/2);
 	    }
-	   
-	    
 	    gl.glNormal3d(Math.cos((2*Math.PI*0)/resolution),Math.sin((2*Math.PI*0)/resolution), 0);
 	    gl.glVertex3d(rayon*Math.cos((2*Math.PI*0)/resolution),rayon*Math.sin((2*Math.PI*0)/resolution),hauteur/2);
 	    gl.glVertex3d(rayon*Math.cos((2*Math.PI*0)/resolution),rayon*Math.sin((2*Math.PI*0)/resolution),-hauteur/2);
@@ -96,18 +83,25 @@ public class Plante extends Vie{
 	@Override
 	public void step() {
 		if ( world.getIteration() % 360 == 0 ){
-		if(grammar.getLevel()<20){
-		grammar.setLevel(grammar.getLevel()+1);
-		System.out.println(grammar.getLevel());
-		grammar.iterate(1);
-		System.out.println(grammar.getResult());
+			if(world.isDAYTIME()){
+		if(grammar.getLevel()<2){
+			if(Math.random()<0.5){
+			grammar.setLevel(grammar.getLevel()+1);
+			grammar.iterate(1);
+			}
+			
+			}
+			}
 		}
-		
-		}
-		
-		
 	}
-	
+	public Grammar getGrammar() {
+		return grammar;
+	}
+
+	public void setGrammar(Grammar grammar) {
+		this.grammar = grammar;
+	}
+
 	public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX,
 			float stepY, float lenX, float lenY, float normalizeHeight) {
 		// TODO Auto-generated method stub
@@ -120,7 +114,7 @@ public class Plante extends Vie{
 		gl.glPushMatrix();
 		
 		gl.glTranslatef(offset+x2*stepX, offset+y2*stepY, altitude);
-		gl.glScalef(2.0f,2.0f,2.0f);
+		
 		//gl.glBegin(GL2.GL_QUADS);
 		for(int i=0;i<grammar.getResult().length();i++){
 			
@@ -129,7 +123,7 @@ public class Plante extends Vie{
 			switch(ch){
 			case 'F':  
 				gl.glTranslatef(pos[0], pos[1], pos[2]);
-				draw(length,0.2f,3,gl);
+				draw(length,0.5f,3,gl);
 	            break; 
 			case 'X':  
 				gl.glTranslatef(pos[0], pos[1], pos[2]/2);

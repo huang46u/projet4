@@ -27,19 +27,14 @@ public abstract class World {
 	Neige neige = new Neige(dir,this);
 	protected int dxCA;
 	protected int dyCA;
-	private boolean SPRING,SUMMER,AUTOMN,WINTER,RAIN,NEIGE;
-	
-
+	private boolean SPRING,SUMMER,AUTOMN,WINTER,RAIN,SNOW,DAYTIME,NIGHT,SUNSET;
 	private double[] wind;
 	protected int indexCA;
-
 	//protected CellularAutomataInteger cellularAutomata; // TO BE DEFINED IN CHILDREN CLASSES
-    
+   
 	protected CellularAutomataDouble cellsHeightValuesCA;
 	protected CellularAutomataDouble cellsHeightAmplitudeCA;
-	
 	public CellularAutomataColor cellsColorValues;
-
 	private double maxEverHeightValue = Double.NEGATIVE_INFINITY;
 	private double minEverHeightValue = Double.POSITIVE_INFINITY;
 
@@ -100,19 +95,62 @@ public abstract class World {
     	AUTOMN=false;
     	WINTER=false;
     	RAIN=false;
-    	NEIGE=false;;
+    	SNOW=false;;
     }
     
     
     public void step()
     {
+    	if(iteration%60==0)
+    	System.out.println(iteration);
+    	if(iteration<12000){
+    		SUMMER=true;
+    		WINTER=false;
+    		SUNSET=false;
+		}
+    	else{
+    		SUMMER=false;
+    		WINTER=true;
+    		SUNSET=false;
+    		SNOW=true;
+    	}
+    	if(iteration%4000>2000&&iteration%4000<3000){
+			DAYTIME=false;
+			NIGHT=false;
+			SUNSET=true;
+			RAIN=false;
+			SNOW=false;
+		}
+    	else if (iteration%4000<2000){
+		DAYTIME=true;
+		NIGHT=false;
+		SUNSET=false;
+    	}
+    	else{
+    		DAYTIME=false;
+    		NIGHT=true;
+    		SUNSET=false;
+    	}
+    	if(DAYTIME==true&&SUMMER==true&&iteration%4000==0){
+    		if(Math.random()<0.5){
+    			RAIN=true;
+    		}
+    	}
+    	if(SUNSET==true&&NIGHT==true){
+    		RAIN=false;
+    	}
+    	
     	stepCellularAutomata();
     	stepVie();
-    	iteration++;
-    	
+    	if(iteration<24000){
+    		iteration++;
+    	}else
+    		iteration=0;
     }
     
-    public int getIteration()
+   
+
+	public int getIteration()
     {
     	return this.iteration;
     }
@@ -157,8 +195,6 @@ public abstract class World {
 	public void displayUniqueObjects(World _myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset,
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight) 
 	{
-    	
-    	
     	for ( int i = 0 ; i < plante.size(); i++ ){
     		plante.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
@@ -168,12 +204,10 @@ public abstract class World {
     	for ( int i = 0 ; i < predator.size(); i++ ){
 	    	predator.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	}
-    	for ( int i = 0 ; i < uniqueObjects.size(); i++ ){
-    		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-    	}
     	if(Rainning()){
     	rain.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
-    	rain.background();}
+    	rain.background();
+    	}
 		if(Snowing()){
     	neige.draw(gl, offsetCA_x, offsetCA_y,offset,stepX,stepY);
     	neige.background();
@@ -193,6 +227,14 @@ public abstract class World {
 		return plante;
 	}
 
+	private void generateWind(){
+		wind=new double[2];
+		wind[0]=(Math.random()*2)-1;
+		wind[1]=(Math.random()*2)-1;
+		System.out.println("windx: "+wind[0]);
+		System.out.println("windy; "+wind[1]);
+	}
+	
 	public double getMaxEverHeight() { return this.maxEverHeightValue; }
 	public double getMinEverHeight() { return this.minEverHeightValue; }
 	
@@ -215,19 +257,29 @@ public abstract class World {
 	public boolean isWINTER() {
 		return WINTER;
 	}
-	private void generateWind(){
-		wind=new double[2];
-		wind[0]=(Math.random()*2)-1;
-		wind[1]=(Math.random()*2)-1;
-		System.out.println("windx: "+wind[0]);
-		System.out.println("windy; "+wind[1]);
-	}
 	
 	public boolean Rainning(){
 		return RAIN;
 	}
 	public boolean Snowing(){
-		return NEIGE;
+		return SNOW;
 	}
+	
+	public boolean isDAYTIME() {
+		return DAYTIME;
+	}
+
+	
+
+	public boolean isNIGHT() {
+		return NIGHT;
+	}
+
+	
+	 public boolean isSUNSET() {
+			return SUNSET;
+		}
+
+		
 
 }
